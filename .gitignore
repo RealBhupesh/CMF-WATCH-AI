@@ -1,0 +1,6 @@
+# Raw captures: large, and bugreports contain device/account data. Keep findings, not logs.
+captures/
+
+.venv/
+__pycache__/
+.DS_Store

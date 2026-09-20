@@ -75,6 +75,33 @@ python3 tools/gatt-dump.py --address <ADDR>
 observed bytes and an F1 verdict of `GO`, `SMS-ONLY` or `NO-REVERSE-CHANNEL`.
 Record only what was seen — never guess a field.
 
+## Reply engine (buildable now — F1-independent)
+
+M0 gates the BLE work and the missing JDK gates the Android work, but the reply
+engine is needed in **all three** F1 outcomes, so it is being built ahead of the
+gate. Stdlib only, Python 3.9+, no API key needed to run the tests.
+
+```bash
+python3 -m unittest discover -s tests          # 26 tests, no network
+python3 tools/reply-demo.py "kal office aa rahe ho?" --sender Rahul
+GROQ_API_KEY=... python3 tools/reply-demo.py "Can you review the deck?" --app com.microsoft.teams
+```
+
+- `engine/model.py` — `IncomingMessage`, `ReplySet`. No Android or BLE imports, by design.
+- `engine/sanitize.py` — watch-safe text. Assumes **ASCII-only, 40 chars** until M0
+  observes the real encoding and length cap; relax the two constants there, not
+  the call sites.
+- `engine/prompt.py` — tone inference (Hinglish / casual English / professional)
+  and prompt construction. Work apps outrank casual content: replying "haan bhai"
+  to Teams is a worse failure than replying formally to a friend.
+- `engine/generate.py` — Groq call with a 1200 ms budget, plus static fallbacks
+  for every tone × intent. `generate()` never raises and never returns fewer than
+  three replies; `from_ai=False` marks the fallback path so the UI can't imply
+  intelligence it didn't deliver.
+
+The Groq key is read from the environment in the backend proxy. It never goes in
+the APK (PRD scope item 6).
+
 ## Prior art
 
 [Gadgetbridge](https://gadgetbridge.org/gadgets/wearables/nothing/) has a CMF Watch
@@ -88,7 +115,9 @@ build on privately.
 ```
 PRD.md                  product definition, F1 gate, fallback branches
 notes/m0-findings.md    the M0 record — protocol facts live here
-tools/                  M0 capture + analysis scripts
-captures/               raw btsnoop logs (gitignored)
+engine/                 reply engine — F1-independent, buildable now
+tests/                  engine tests (no network, no key)
+tools/                  M0 capture + analysis scripts, reply demo
+captures/               raw btsnoop logs (gitignored — bugreports carry device data)
 app/                    Android app — empty until M2
 ```

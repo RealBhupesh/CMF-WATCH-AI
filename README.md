@@ -102,6 +102,22 @@ GROQ_API_KEY=... python3 tools/reply-demo.py "Can you review the deck?" --app co
 The Groq key is read from the environment in the backend proxy. It never goes in
 the APK (PRD scope item 6).
 
+## Proxy
+
+Holds the Groq key so the APK never does. Stdlib only, no framework.
+
+```bash
+GROQ_API_KEY=... python3 proxy/server.py --port 8787
+curl -s localhost:8787/replies -H 'content-type: application/json' \
+  -d '{"sender":"Rahul","body":"kal office aa rahe ho?","app":"com.whatsapp"}'
+```
+
+Binds loopback by default — bind wider only behind TLS. Message bodies are never
+logged, never written to disk and never held past the request; if you add a body
+to a log line in [proxy/server.py](proxy/server.py) you have broken the privacy
+promise in PRD scope item 5. Responses carry `from_ai`, and the client must
+surface it: fallback replies are not AI replies.
+
 ## Prior art
 
 [Gadgetbridge](https://gadgetbridge.org/gadgets/wearables/nothing/) has a CMF Watch
@@ -116,7 +132,8 @@ build on privately.
 PRD.md                  product definition, F1 gate, fallback branches
 notes/m0-findings.md    the M0 record — protocol facts live here
 engine/                 reply engine — F1-independent, buildable now
-tests/                  engine tests (no network, no key)
+proxy/                  backend proxy holding the Groq key
+tests/                  engine + proxy tests (no network, no key)
 tools/                  M0 capture + analysis scripts, reply demo
 captures/               raw btsnoop logs (gitignored — bugreports carry device data)
 app/                    Android app — empty until M2

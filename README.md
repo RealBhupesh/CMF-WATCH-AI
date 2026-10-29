@@ -2,6 +2,10 @@
 
 Workspace for WatchAI v1 (see [PRD.md](PRD.md)).
 
+> This repository also contains [web-watch-mcp/](web-watch-mcp/), an independent
+> TypeScript MCP server for monitoring web pages. It is unrelated to the
+> CMF smartwatch work below.
+
 ## Status
 
 - PRD committed, resequenced around the F1 gate. No app code yet — and none until M0 answers F1.
@@ -118,6 +122,25 @@ to a log line in [proxy/server.py](proxy/server.py) you have broken the privacy
 promise in PRD scope item 5. Responses carry `from_ai`, and the client must
 surface it: fallback replies are not AI replies.
 
+## Web URL watches (`web-watch-mcp/`)
+
+An independent TypeScript MCP server that monitors public web pages on a
+schedule. The owner gives each watch a natural-language intent; the server
+stores readable-text baselines, queues deterministic diffs when content
+changes, and exposes an evidence inbox for a connected MCP agent to judge. It
+is report-only and never submits forms.
+
+```bash
+cd web-watch-mcp
+npm ci
+npm run playwright:install
+npm run setup
+npm run check
+```
+
+See [web-watch-mcp/README.md](web-watch-mcp/README.md) and
+[web-watch-mcp/docs/designs/ai-native-watch.md](web-watch-mcp/docs/designs/ai-native-watch.md).
+
 ## Prior art
 
 [Gadgetbridge](https://gadgetbridge.org/gadgets/wearables/nothing/) has a CMF Watch
@@ -135,6 +158,7 @@ engine/                 reply engine — F1-independent, buildable now
 proxy/                  backend proxy holding the Groq key
 tests/                  engine + proxy tests (no network, no key)
 tools/                  M0 capture + analysis scripts, reply demo
+web-watch-mcp/          separate browser URL-monitoring MCP server (TypeScript)
 captures/               raw btsnoop logs (gitignored — bugreports carry device data)
 app/                    Android app — empty until M2
 ```

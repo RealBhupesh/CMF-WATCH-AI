@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: business-browser-mcp
+    runtime: docker
+    plan: standard
+    numInstances: 1
+    healthCheckPath: /healthz
+    disk:
+      name: browser-data
+      mountPath: /app/data
+      sizeGB: 10
+    envVars:
+      - key: DATA_DIR
+        value: /app/data
+      - key: BROWSER_HEADLESS
+        value: "true"
+      - key: MCP_HTTP_HOST
+        value: 0.0.0.0
+      - key: MCP_TRUST_PROXY
+        value: "1"
+      - key: MCP_OWNER_PASSWORD
+        generateValue: true
+      - key: MCP_JWT_SECRET
+        generateValue: true

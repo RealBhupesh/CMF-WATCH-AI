@@ -1,0 +1,4 @@
+{$JOB_CRAWLER_DOMAIN} {
+	encode zstd gzip
+	reverse_proxy job-crawler:8788
+}

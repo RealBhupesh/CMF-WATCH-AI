@@ -1,0 +1,51 @@
+{
+  // Production template. Copy it to the gitignored production file:
+  //   cp wrangler.prod.jsonc wrangler.production.jsonc
+  //
+  // Replace every REPLACE_WITH_* value and both example.com hostnames, then:
+  //
+  //   npm run db:migrate:remote
+  //   npm run deploy
+  //
+  // Secrets are not here. Set them once per Worker:
+  //   npx wrangler secret put GROQ_API_KEY --config wrangler.production.jsonc
+  //   npx wrangler secret put TOKEN_PEPPER --config wrangler.production.jsonc
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "watchai-console",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "workers_dev": false,
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "watchai-console",
+      "database_id": "REPLACE_WITH_D1_DATABASE_ID",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "production",
+    "AUTH_MODE": "access",
+    "VERSION": "0.1.0",
+    "DASHBOARD_HOST": "watchai.example.com",
+    "API_HOST": "api.example.com",
+    "DASHBOARD_ORIGIN": "https://watchai.example.com",
+    "API_ORIGIN": "https://api.example.com",
+    "ACCESS_TEAM_DOMAIN": "REPLACE_WITH_TEAM.cloudflareaccess.com",
+    "ACCESS_AUD": "REPLACE_WITH_ACCESS_AUD",
+    "GROQ_MODEL": "llama-3.3-70b-versatile",
+    "RATE_LIMIT_PER_MIN": "30"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "triggers": {
+    "crons": ["0 3 * * *"]
+  }
+}

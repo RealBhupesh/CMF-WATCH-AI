@@ -1,0 +1,28 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "watchai-console-test",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "watchai-console-test",
+      "database_id": "00000000-0000-0000-0000-000000000001",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "test",
+    "AUTH_MODE": "dev",
+    "VERSION": "test",
+    "DASHBOARD_HOST": "watchai.test",
+    "API_HOST": "api.watchai.test",
+    "DASHBOARD_ORIGIN": "https://watchai.test",
+    "API_ORIGIN": "https://api.watchai.test",
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "GROQ_MODEL": "llama-3.3-70b-versatile",
+    "RATE_LIMIT_PER_MIN": "3",
+    "TOKEN_PEPPER": "test-pepper-at-least-16-chars"
+  }
+}

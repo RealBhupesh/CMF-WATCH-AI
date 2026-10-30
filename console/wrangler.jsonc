@@ -1,0 +1,39 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "watchai-console",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "watchai-console",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "ENVIRONMENT": "development",
+    "AUTH_MODE": "dev",
+    "VERSION": "0.1.0",
+    "DASHBOARD_HOST": "localhost:8787",
+    "API_HOST": "localhost:8787",
+    "DASHBOARD_ORIGIN": "http://localhost:5173",
+    "API_ORIGIN": "http://localhost:8787",
+    "ACCESS_TEAM_DOMAIN": "",
+    "ACCESS_AUD": "",
+    "GROQ_MODEL": "llama-3.3-70b-versatile",
+    "RATE_LIMIT_PER_MIN": "30"
+  },
+  "observability": {
+    "enabled": true
+  },
+  "triggers": {
+    "crons": ["0 3 * * *"]
+  }
+}
